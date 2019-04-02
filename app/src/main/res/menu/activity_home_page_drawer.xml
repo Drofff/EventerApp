@@ -6,12 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
+            android:icon="@drawable/hubspot"
             android:title="Add room" />
         <item
             android:id="@+id/nav_gallery"
+            android:icon="@drawable/city"
             android:title="Add address" />
         <item
             android:id="@+id/nav_slideshow"
+            android:icon="@drawable/wrenchoutline"
             android:title="Settings" />
     </group>
 
@@ -19,6 +22,7 @@
         <menu>
             <item
                 android:id="@+id/nav_send"
+                android:icon="@drawable/power"
                 android:title="Log out" />
         </menu>
     </item>

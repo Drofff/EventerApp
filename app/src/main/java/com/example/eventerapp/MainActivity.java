@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -17,12 +18,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.eventerapp.entity.UserData;
+import com.example.eventerapp.utils.DatabaseContract;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
@@ -31,6 +35,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton logInButton;
 
     GoogleSignInClient client;
+
+    DatabaseReference db;
+
+    GoogleSignInAccount googleSignInAccount;
 
     FirebaseAuth firebaseAuth;
 
@@ -88,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == LOGIN_ACTIVITY) {
             Task<GoogleSignInAccount> googleSignInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                GoogleSignInAccount googleSignInAccount = googleSignInAccountTask.getResult(ApiException.class);
+                googleSignInAccount = googleSignInAccountTask.getResult(ApiException.class);
                 firebaseLogin(googleSignInAccount);
             } catch (Exception e) {
                 Toast.makeText(MainActivity.this, "Authorizaton failed", Toast.LENGTH_LONG).show();
@@ -98,8 +118,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login() {
-        Intent intent = new Intent(this, HomePage.class);
-        startActivity(intent);
+        db = FirebaseDatabase.getInstance().getReference().child(DatabaseContract.USER_DATA_KEY);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                boolean isNew = true;
+
+                int lastKey = 0;
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                    lastKey = Integer.parseInt(ds.getKey()) + 1;
+
+                    String emailOfThisOne = ds.child("email").getValue(String.class);
+
+                    if (ds.hasChild("email") && emailOfThisOne != null && emailOfThisOne.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        isNew = false;
+                    }
+                }
+
+                if (isNew) {
+
+                            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        ByteArrayOutputStream outputStreamForPhoto = new ByteArrayOutputStream();
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        Picasso.with(MainActivity.this).load(user.getPhotoUrl()).get().compress(Bitmap.CompressFormat.PNG, 100, outputStreamForPhoto);
+                                        FirebaseStorage.getInstance().getReference().child("users").child(user.getEmail()).putBytes(outputStreamForPhoto.toByteArray());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                    UserData userData = new UserData();
+                    userData.setCurrentPostion("free");
+                    userData.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    db.child(lastKey + "").setValue(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Intent intent = new Intent(MainActivity.this, HomePage.class);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    Intent intent = new Intent(MainActivity.this, HomePage.class);
+                    startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void firebaseLogin(final GoogleSignInAccount account) {
@@ -120,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (firebaseAuth.getCurrentUser() != null) {
-           login();
+           Intent intent = new Intent(this, HomePage.class);
+           startActivity(intent);
         }
     }
 }

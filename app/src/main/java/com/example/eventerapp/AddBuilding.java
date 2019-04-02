@@ -19,7 +19,9 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +33,10 @@ import com.example.eventerapp.entity.Building;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,6 +46,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
@@ -66,6 +73,10 @@ public class AddBuilding extends AppCompatActivity {
 
     EditText numberOfFloors;
 
+    Integer rotation = 90;
+
+    Uri lastPhotoUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,26 +95,58 @@ public class AddBuilding extends AppCompatActivity {
 
         loadImageButton = (ImageButton) findViewById(R.id.button2);
         loadImageButton.setColorFilter(Color.WHITE);
-        loadImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(AddBuilding.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(AddBuilding.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    String [] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                    ActivityCompat.requestPermissions(AddBuilding.this, permissions, 1);
-                } else {
-                    Intent intent = new Intent().setType("image/*")
-                            .setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent,  "Choose a image"),  CONTENT_GET_KEY);
+
+        loadImageButton.setOnTouchListener(new View.OnTouchListener() {
+            private GestureDetector gestureDetector = new GestureDetector(AddBuilding.this, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    rotation = rotation == 360 ? 90 : rotation + 90;
+                    getPhotoFromMemory(lastPhotoUri);
+                    return super.onDoubleTap(e);
                 }
 
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    if (ContextCompat.checkSelfPermission(AddBuilding.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(AddBuilding.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        String [] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        ActivityCompat.requestPermissions(AddBuilding.this, permissions, 1);
+                    } else {
+                        Intent intent = new Intent().setType("image/*")
+                                .setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent,  "Choose a image"),  CONTENT_GET_KEY);
+                    }
+                    return true;
+                }
+            });
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
             }
         });
-
+        //TODO error messages
         addBuilding = (Button) findViewById(R.id.addBuildingB);
         addBuilding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String address = addressField.getText().toString();
+                final String address = addressField.getText().toString();
+                database.getReference().child("buildings").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            String addressExs = data.child("address").getValue(String.class);
+                            if (addressExs.equals(address)) {
+                                Toast.makeText(AddBuilding.this, "Address already exists", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 if (address != null && address.length() > 3) {
 
                     Long numberOfRooms = 0l;
@@ -188,46 +231,53 @@ public class AddBuilding extends AppCompatActivity {
 
     }
 
+    private void getPhotoFromMemory(final Uri uri) {
+        lastPhotoUri = uri;
+        progressBar.setVisibility(View.VISIBLE);
+        final int width = loadImageButton.getWidth();
+        final int height = loadImageButton.getHeight();
+        try {
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        photo = Picasso.with(AddBuilding.this).load(uri).rotate(rotation).resize(width, height).centerCrop().get();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadImageButton.setColorFilter(null);
+                                loadImageButton.setImageBitmap(photo);
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(AddBuilding.this, "double tap to rotate image", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } catch (Exception e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(AddBuilding.this, "Error while loading photo", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Can't load image", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         final Uri uri = data.getData();
         if (requestCode == CONTENT_GET_KEY) {
-            progressBar.setVisibility(View.VISIBLE);
-            final int width = loadImageButton.getWidth();
-            final int height = loadImageButton.getHeight();
-            try {
-                Executors.newSingleThreadExecutor().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            photo = Picasso.with(AddBuilding.this).load(uri).resize(width, height).centerCrop().get();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loadImageButton.setColorFilter(null);
-                                    loadImageButton.setImageBitmap(photo);
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                }
-                            });
-                        } catch (Exception e) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    Toast.makeText(AddBuilding.this, "Error while loading photo", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Can't load image", Toast.LENGTH_LONG).show();
-            }
+            getPhotoFromMemory(uri);
         }
 
     }
