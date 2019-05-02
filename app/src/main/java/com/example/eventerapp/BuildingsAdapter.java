@@ -2,6 +2,7 @@ package com.example.eventerapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -9,22 +10,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.eventerapp.entity.Building;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +34,13 @@ public class BuildingsAdapter extends RecyclerView.Adapter<BuildingsAdapter.Buil
     List<Building> buildings = new ArrayList<>();
     Context contextHome;
     Map<String, String> dbKeys;
+    PhotosViewModel photosViewModel;
 
-    public BuildingsAdapter(Context contextHome, List<Building> buildings, Map<String, String> dbKeys) {
+    public BuildingsAdapter(Context contextHome, List<Building> buildings, Map<String, String> dbKeys, PhotosViewModel photosViewModel) {
         this.contextHome = contextHome;
         this.dbKeys = dbKeys;
         this.buildings = buildings;
+        this.photosViewModel = photosViewModel;
     }
 
     @NonNull
@@ -57,16 +58,24 @@ public class BuildingsAdapter extends RecyclerView.Adapter<BuildingsAdapter.Buil
 
             buildingView.setOpenInApp(dbKeys.get(building.emailOfUser),  building.floors.size(), contextHome);
 
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference reference = storage.getReference("images");
-            reference.child("buildingBY" + building.emailOfUser).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.with(contextHome).load(uri).into(buildingView.getImageView());
-                }
-            });
+            String photoNameInMemory = "buildingBY" + building.emailOfUser;
+
+            Bitmap cachedPhoto = photosViewModel.getPhoto(PhotosViewModel.BUILDING_PHOTO, photoNameInMemory, buildingView.getImageView().getWidth(), buildingView.getImageView().getHeight());
+
+            if (cachedPhoto != null) {
+                buildingView.getImageView().setImageBitmap(cachedPhoto);
+            } else {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference reference = storage.getReference("images");
+                reference.child(photoNameInMemory).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(contextHome).load(uri).into(buildingView.getImageView());
+                    }
+                });
+            }
     }
-        //reload rooms on data change
+
 
     @Override
     public int getItemCount() {

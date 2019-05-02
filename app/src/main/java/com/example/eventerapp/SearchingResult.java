@@ -1,6 +1,7 @@
 package com.example.eventerapp;
 
 import android.app.SearchManager;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
@@ -11,6 +12,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.eventerapp.entity.Building;
 import com.example.eventerapp.utils.DatabaseContract;
@@ -35,6 +39,12 @@ public class SearchingResult extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
+    ImageView notFoundImage;
+
+    TextView sorryText;
+
+    PhotosViewModel photosViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +52,7 @@ public class SearchingResult extends AppCompatActivity {
         setContentView(R.layout.activity_searching_result);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        photosViewModel = ViewModelProviders.of(this).get(PhotosViewModel.class);
         Intent inputIntent = getIntent();
         query = inputIntent.getStringExtra(SearchManager.QUERY);
         if (query != null) {
@@ -51,10 +62,12 @@ public class SearchingResult extends AppCompatActivity {
             recyclerView = (RecyclerView) findViewById(R.id.search_recyler_view);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            notFoundImage = findViewById(R.id.photoSorry);
+            sorryText = findViewById(R.id.sorryText);
             recyclerView.setLayoutManager(linearLayoutManager);
             DividerItemDecoration decoration = new DividerItemDecoration(this, linearLayoutManager.getOrientation());
             recyclerView.addItemDecoration(decoration);
-            recyclerView.setAdapter(new BuildingsAdapter(this, new ArrayList<Building>(), Collections.<String, String>emptyMap()));
+            recyclerView.setAdapter(new BuildingsAdapter(this, new ArrayList<Building>(), Collections.<String, String>emptyMap(), photosViewModel));
             recyclerView.setHasFixedSize(true);
         } else {
             Intent intent = new Intent(this, HomePage.class);
@@ -138,7 +151,13 @@ public class SearchingResult extends AppCompatActivity {
                         return searchingResults.get(o1) - searchingResults.get(o2);
                     }
                 });
-                recyclerView.setAdapter(new BuildingsAdapter(SearchingResult.this, buildings, dbKeys));
+
+                if (buildings.size() < 1) {
+                    sorryText.setVisibility(View.VISIBLE);
+                    notFoundImage.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setAdapter(new BuildingsAdapter(SearchingResult.this, buildings, dbKeys, photosViewModel));
+                }
             }
 
             @Override

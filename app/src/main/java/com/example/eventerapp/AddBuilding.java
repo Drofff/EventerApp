@@ -124,7 +124,6 @@ public class AddBuilding extends AppCompatActivity {
                 return true;
             }
         });
-        //TODO error messages
         addBuilding = (Button) findViewById(R.id.addBuildingB);
         addBuilding.setOnClickListener(new View.OnClickListener() {
             @Override

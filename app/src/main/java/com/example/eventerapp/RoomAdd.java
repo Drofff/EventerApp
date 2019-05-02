@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -239,7 +240,10 @@ public class RoomAdd extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
 
-                                                FirebaseDatabase.getInstance().getReference().child(DatabaseContract.USER_DATA_KEY).child(objRoom.getOwnerId()).child("roomId").setValue(objRoom.getRoomId());
+                                                DatabaseReference userDataRef = FirebaseDatabase.getInstance().getReference().child(DatabaseContract.USER_DATA_KEY).child(objRoom.getOwnerId());
+
+                                                userDataRef.child("roomId").setValue(objRoom.getRoomId());
+                                                userDataRef.child("floorId").setValue(floorRoomData + ":" + buildings.get(buildingSelected));
 
                                                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("rooms").child(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                                                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -348,9 +352,7 @@ public class RoomAdd extends AppCompatActivity {
             getPhotoFromMemory(data.getData());
         }
     }
-
-    //TODO floor switch, details for event
-
+//TODO 1 my status and my qr code, my chats, save to gallery qr
 
     @Override
     protected void onResume() {

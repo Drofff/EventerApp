@@ -3,21 +3,17 @@ package com.example.eventerapp;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.eventerapp.entity.Event;
-import com.example.eventerapp.entity.Room;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,12 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,11 +35,14 @@ public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.RoomViewHold
 
     Context context;
 
+    private static PhotosViewModel photosViewModel;
 
-    public RoomsAdapter(Context context, List<Event> events) {
+
+    public RoomsAdapter(Context context, List<Event> events, PhotosViewModel photosViewModel) {
 
         this.context = context;
         this.events = events;
+        this.photosViewModel = photosViewModel;
     }
 
     public void setRooms(List<Event> rooms) {
@@ -63,14 +59,21 @@ public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.RoomViewHold
     @Override
     public void onBindViewHolder(@NonNull final RoomViewHolder roomViewHolder, int i) {
         final Event event = events.get(i);
+
         if (event != null) {
+
             roomViewHolder.setTitle(event.getTitle());
+
             if (event.getOwnerEmail() != null) {
-                System.out.println("I AM IN IF");
                 FirebaseStorage.getInstance().getReference().child("rooms").child(event.getOwnerEmail()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        roomViewHolder.setRoomPhoto(uri);
+                        Bitmap cacheRoomPhoto = photosViewModel.getPhoto(PhotosViewModel.ROOM_PHOTO, uri.toString(), roomViewHolder.roomPhoto.getWidth(), roomViewHolder.roomPhoto.getHeight());
+                        if (cacheRoomPhoto != null) {
+                            roomViewHolder.roomPhoto.setImageBitmap(cacheRoomPhoto);
+                        } else {
+                            roomViewHolder.setRoomPhoto(uri);
+                        }
                     }
                 });
             }
@@ -96,21 +99,23 @@ public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.RoomViewHold
 
                                     StorageReference refer = FirebaseStorage.getInstance().getReference().child("users");
 
-                                    if (count == 1) {
+                                    if (count >= 1) {
                                         refer.child(snapshot.child("email").getValue(String.class)).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
                                             public void onSuccess(Uri uri) {
                                                 roomViewHolder.setMember1Photo(uri);
                                             }
                                         });
-                                    } else if (count == 2) {
+                                    }
+                                    if (count >= 2) {
                                         refer.child(snapshot.child("email").getValue(String.class)).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
                                             public void onSuccess(Uri uri) {
                                                 roomViewHolder.setMember2Photo(uri);
                                             }
                                         });
-                                    } else if (count == 3) {
+                                    }
+                                    if (count >= 3) {
                                         refer.child(snapshot.child("email").getValue(String.class)).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
                                             public void onSuccess(Uri uri) {
@@ -178,15 +183,30 @@ public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.RoomViewHold
         }
 
         public void setMember1Photo(Uri m1) {
-            Picasso.with(context).load(m1).resize(member1.getWidth(), member1.getHeight()).centerCrop().into(member1);
+            Bitmap cacheU1 = RoomsAdapter.photosViewModel.getPhoto(PhotosViewModel.USER_PHOTO, m1.toString(), member1.getWidth(), member1.getHeight());
+            if (cacheU1 != null) {
+                member1.setImageBitmap(cacheU1);
+            } else {
+                Glide.with(context).load(m1).apply(new RequestOptions().override(member1.getWidth(), member1.getHeight())).centerCrop().into(member1);
+            }
         }
 
         public void setMember2Photo(Uri m2) {
-            Picasso.with(context).load(m2).resize(member2.getWidth(), member2.getHeight()).centerCrop().into(member2);
+            Bitmap cacheU2 = RoomsAdapter.photosViewModel.getPhoto(PhotosViewModel.USER_PHOTO, m2.toString(), member2.getWidth(), member2.getHeight());
+            if (cacheU2 != null) {
+                member2.setImageBitmap(cacheU2);
+            } else {
+                Glide.with(context).load(m2).apply(new RequestOptions().override(member2.getWidth(), member2.getHeight())).centerCrop().into(member2);
+            }
         }
 
         public void setMember3Photo(Uri m3) {
-            Picasso.with(context).load(m3).resize(member3.getWidth(), member3.getHeight()).centerCrop().into(member3);;
+            Bitmap cacheU3 = RoomsAdapter.photosViewModel.getPhoto(PhotosViewModel.USER_PHOTO, m3.toString(), member3.getWidth(), member3.getHeight());
+            if (cacheU3 != null) {
+                member3.setImageBitmap(cacheU3);
+            } else {
+                Glide.with(context).load(m3).apply(new RequestOptions().override(member3.getWidth(), member3.getHeight())).centerCrop().into(member3);
+            }
         }
 
         public void setRoomNumber(String number) {
@@ -202,7 +222,7 @@ public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.RoomViewHold
         }
 
         public void setRoomPhoto(Uri photo) {
-            Picasso.with(context).load(photo).resize(roomPhoto.getWidth(), roomPhoto.getHeight()).centerCrop().into(roomPhoto);
+                Glide.with(context).load(photo).apply(new RequestOptions().override(roomPhoto.getWidth(), roomPhoto.getHeight())).centerCrop().into(roomPhoto);
         }
 
         public void setTitle(String title) {

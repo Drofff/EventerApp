@@ -30,6 +30,6 @@
         android:layout_margin="@dimen/fab_margin"
         android:backgroundTint="@android:color/holo_blue_bright"
         android:tint="@android:color/white"
-        app:srcCompat="@drawable/barcode_scan" />
+        app:srcCompat="@drawable/qr_code_scan_icon" />
 
 </android.support.design.widget.CoordinatorLayout>

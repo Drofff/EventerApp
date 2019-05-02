@@ -12,4 +12,6 @@ public class DatabaseContract {
 
     public static final String USER_DATA_KEY = "userData";
 
+    public static final String CHAT_DATA_KEY = "chat";
+
 }

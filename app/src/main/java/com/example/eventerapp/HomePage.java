@@ -79,6 +79,12 @@ public class HomePage extends AppCompatActivity
 
     private boolean hasRoom = false;
 
+    ImageView notFoundImage;
+
+    TextView notFoundText;
+
+    public static PhotosViewModel photosViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +95,12 @@ public class HomePage extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Eventer");
 
+        roomCheck();
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+
+        notFoundImage = findViewById(R.id.notFoundBuild);
+        notFoundText = findViewById(R.id.notFoundBuildText);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -98,18 +109,17 @@ public class HomePage extends AppCompatActivity
         recyclerView.setHasFixedSize(true);
         DividerItemDecoration decoration = new DividerItemDecoration(this, linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(decoration);
-        recyclerView.setAdapter(new BuildingsAdapter(this, new ArrayList<Building>(), Collections.<String, String>emptyMap()));
+        recyclerView.setAdapter(new BuildingsAdapter(this, new ArrayList<Building>(), Collections.<String, String>emptyMap(), photosViewModel));
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Open QR reader", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               Intent intent = new Intent(HomePage.this, CameraActivity.class);
+               startActivity(intent);
             }
         });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -128,7 +138,7 @@ public class HomePage extends AppCompatActivity
         valueEventListener = homeViewModel.getDatabase().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                adapter = new BuildingsAdapter(HomePage.this, updateData(dataSnapshot), openUris);
+                adapter = new BuildingsAdapter(HomePage.this, updateData(dataSnapshot), openUris, photosViewModel);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -138,7 +148,6 @@ public class HomePage extends AppCompatActivity
             }
         });
 
-        roomCheck();
     }
 
 
@@ -168,6 +177,11 @@ public class HomePage extends AppCompatActivity
             buildings.add(new Building((String) result.get("address"), (String) result.get("photoUrl"), floorsNames, email));
         }
 
+        if (buildings.size() < 1) {
+            notFoundImage.setVisibility(View.VISIBLE);
+            notFoundText.setVisibility(View.VISIBLE);
+        }
+
         return buildings;
 
 
@@ -188,6 +202,7 @@ public class HomePage extends AppCompatActivity
                        hasRoom = true;
                        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_camera);
                        menuItem.setTitle(Html.fromHtml("<font color='gray'>" + menuItem.getTitle() + "</font>"));
+                       break;
                     } else {
                         hasRoom = false;
                     }
@@ -259,7 +274,6 @@ public class HomePage extends AppCompatActivity
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setBackgroundColor(android.R.color.white);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -311,10 +325,24 @@ public class HomePage extends AppCompatActivity
         } else if (id == R.id.nav_gallery && canAddNewBuilding == false) {
             Toast.makeText(this, "You can't add more than 1 building", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_slideshow) {
-
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_send) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, MainActivity.class));
+        } else if (id == R.id.my_qr_nav) {
+            if (hasRoom) {
+                Intent intent = new Intent(this, MyQrActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(HomePage.this, "You do not have a room", Toast.LENGTH_LONG).show();
+            }
+        } else if (id == R.id.my_status_nav) {
+            Intent in = new Intent(this, MyStatusActivity.class);
+            startActivity(in);
+        } else if (id == R.id.my_chats_nav) {
+            Intent in = new Intent(this, MyChatsActivity.class);
+            startActivity(in);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

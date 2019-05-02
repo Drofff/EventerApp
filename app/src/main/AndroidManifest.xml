@@ -4,33 +4,83 @@
     package="com.example.eventerapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <dist:module dist:instant="true" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="false"
+        android:icon="@drawable/my_qr_code_icon"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchingResult"
-            android:parentActivityName=".HomePage">
+        <activity android:name=".MyChatsActivity"
+            android:parentActivityName=".HomePage"></activity>
+        <activity
+            android:name=".MyStatusActivity"
+            android:parentActivityName=".HomePage" />
+        <activity
+            android:name=".MyQrActivity"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".QrResultActivity"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CameraActivity"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".HomePage" />
+        <activity
+            android:name=".MembersActivity"
+            android:parentActivityName=".ChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChatActivity"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SearchingResult"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.MessageNotificationJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".RoomAdd"
-            android:parentActivityName=".HomePage" />
-        <activity android:name=".EventActivity"
             android:parentActivityName=".HomePage"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventActivity"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RoomActivity"
-            android:parentActivityName=".HomePage" />
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddBuilding"
             android:parentActivityName=".HomePage"
@@ -38,6 +88,7 @@
         <activity
             android:name=".HomePage"
             android:label="@string/title_activity_home_page"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"

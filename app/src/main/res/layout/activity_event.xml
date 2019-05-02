@@ -7,69 +7,16 @@
     tools:context=".EventActivity">
 
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="248dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/eventerDetailedTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="sans-serif-condensed-light"
-            android:maxLength="28"
-            android:text="The best ever event!"
-            android:textColor="@android:color/white"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.785" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/eventerDetailedPhoto"
-            android:layout_width="146dp"
-            android:layout_height="136dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.052" />
-
-    </android.support.constraint.ConstraintLayout>
-
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="151dp"
         android:layout_height="62dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="250dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.412">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="match_parent"
@@ -89,172 +36,237 @@
             android:textSize="12sp" />
     </android.support.v7.widget.CardView>
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="297dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:layout_constraintVertical_bias="1.0">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="286dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/detailedDescription"
-                android:layout_width="280dp"
+                android:id="@+id/eventerDetailedTitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Description"
+                android:fontFamily="sans-serif-condensed-light"
+                android:maxLength="28"
+                android:text="The best ever event!"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.484"
+                app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.151" />
+                app:layout_constraintVertical_bias="0.761" />
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="39dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="224dp"
-                android:layout_marginEnd="8dp"
-                android:tint="@android:color/holo_blue_light"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.141"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
-                app:srcCompat="@drawable/maplegend" />
-
-            <Button
-                android:id="@+id/findOnMapDetailed"
-                android:layout_width="143dp"
-                android:layout_height="43dp"
-                android:layout_marginTop="228dp"
-                android:background="@android:color/transparent"
-                android:text="Find on map"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="14dp"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription" />
-
-            <ImageView
-                android:id="@+id/detailedStartDate"
-                android:layout_width="39dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="144dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:tint="@android:color/holo_blue_light"
-                app:layout_constraintBottom_toTopOf="@+id/imageView2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.141"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
-                app:layout_constraintVertical_bias="0.916"
-                app:srcCompat="@drawable/calendar" />
-
-            <TextView
-                android:id="@+id/startDateDetailed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/eventerDetailedPhoto"
+                android:layout_width="146dp"
+                android:layout_height="136dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="20.12.2019 20:30 AM"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="14dp"
-                app:layout_constraintBottom_toTopOf="@+id/findOnMapDetailed"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.125"
-                app:layout_constraintStart_toEndOf="@+id/detailedStartDate"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
-                app:layout_constraintVertical_bias="0.918" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="39dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:tint="@android:color/holo_blue_light"
-                app:layout_constraintBottom_toTopOf="@+id/startDateDetailed"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.144"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
-                app:layout_constraintVertical_bias="0.834"
-                app:srcCompat="@drawable/cellphone" />
-
-            <TextView
-                android:id="@+id/phoneNumberDetailed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="+380662859459"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="14dp"
-                app:layout_constraintBottom_toTopOf="@+id/startDateDetailed"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.085"
-                app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
-                app:layout_constraintVertical_bias="0.77" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="39dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:tint="@android:color/holo_blue_light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.144"
+                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
-                app:layout_constraintVertical_bias="0.214"
-                app:srcCompat="@drawable/closeddoor" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.052" />
 
-            <TextView
-                android:id="@+id/detaiiledRoomNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="301"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="14dp"
-                app:layout_constraintBottom_toTopOf="@+id/phoneNumberDetailed"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.112"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
-                app:layout_constraintVertical_bias="0.666" />
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintVertical_bias="1.0">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/detailedDescription"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.484"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.151" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="39dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="224dp"
+                    android:layout_marginEnd="8dp"
+                    android:tint="@android:color/holo_blue_light"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.141"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
+                    app:srcCompat="@drawable/maplegend" />
+
+                <Button
+                    android:id="@+id/findOnMapDetailed"
+                    android:layout_width="143dp"
+                    android:layout_height="43dp"
+                    android:layout_marginTop="228dp"
+                    android:background="@android:color/transparent"
+                    android:text="Find on map"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:textSize="14dp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription" />
+
+                <ImageView
+                    android:id="@+id/detailedStartDate"
+                    android:layout_width="39dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="144dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:tint="@android:color/holo_blue_light"
+                    app:layout_constraintBottom_toTopOf="@+id/imageView2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.141"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
+                    app:layout_constraintVertical_bias="0.916"
+                    app:srcCompat="@drawable/calendar" />
+
+                <TextView
+                    android:id="@+id/startDateDetailed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="20.12.2019 20:30 AM"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toTopOf="@+id/findOnMapDetailed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.125"
+                    app:layout_constraintStart_toEndOf="@+id/detailedStartDate"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
+                    app:layout_constraintVertical_bias="0.918" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="39dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:tint="@android:color/holo_blue_light"
+                    app:layout_constraintBottom_toTopOf="@+id/startDateDetailed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.144"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
+                    app:layout_constraintVertical_bias="0.834"
+                    app:srcCompat="@drawable/cellphone" />
+
+                <TextView
+                    android:id="@+id/phoneNumberDetailed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="+380662859459"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toTopOf="@+id/startDateDetailed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.085"
+                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
+                    app:layout_constraintVertical_bias="0.77" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="39dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:tint="@android:color/holo_blue_light"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.144"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
+                    app:layout_constraintVertical_bias="0.214"
+                    app:srcCompat="@drawable/closeddoor" />
+
+                <TextView
+                    android:id="@+id/detaiiledRoomNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="301"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toTopOf="@+id/phoneNumberDetailed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.112"
+                    app:layout_constraintStart_toEndOf="@+id/imageView3"
+                    app:layout_constraintTop_toBottomOf="@+id/detailedDescription"
+                    app:layout_constraintVertical_bias="0.666" />
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@android:color/white"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/sym_action_chat" />
 
 
 </android.support.constraint.ConstraintLayout>

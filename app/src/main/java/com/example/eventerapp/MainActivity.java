@@ -3,6 +3,7 @@ package com.example.eventerapp;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         logInButton = (FloatingActionButton) findViewById(R.id.button);
 
+        HomePage.photosViewModel = ViewModelProviders.of(this).get(PhotosViewModel.class);
 
         actionBar = getSupportActionBar();
         actionBar.setTitle(Html.fromHtml("<font color = 'gray'>Eventer</font>"));

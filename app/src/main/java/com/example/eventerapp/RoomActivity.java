@@ -1,9 +1,11 @@
 package com.example.eventerapp;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -11,9 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eventerapp.entity.Event;
@@ -21,6 +29,7 @@ import com.example.eventerapp.entity.Floor;
 import com.example.eventerapp.entity.Room;
 import com.example.eventerapp.entity.UserData;
 import com.example.eventerapp.utils.DatabaseContract;
+import com.example.eventerapp.utils.SwipeListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,22 +61,41 @@ public class RoomActivity extends AppCompatActivity {
 
     List<Event> eventsList = new ArrayList<>();
 
+    ConstraintLayout roomPageLayout;
+
+    Integer idOfFloor;
+
+    Integer floorCount;
+
+    ImageView notFoundIcon;
+
+    TextView notFoundText;
+
+    PhotosViewModel photosViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
         setContentView(R.layout.activity_room);
+
+        photosViewModel = HomePage.photosViewModel;
 
         recyclerView = (RecyclerView) findViewById(R.id.roomShow);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new RoomsAdapter(this, new ArrayList<Event>()));
+        recyclerView.setAdapter(new RoomsAdapter(this, new ArrayList<Event>(), photosViewModel));
         progressBar = (ProgressBar) findViewById(R.id.progressBar3);
 
+        notFoundIcon = findViewById(R.id.roomNotFoundImage);
+        notFoundText = findViewById(R.id.roomNotFoundText);
+        roomPageLayout = findViewById(R.id.activityRoomLayout);
+
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         id = getIntent().getStringExtra("id");
@@ -76,6 +104,12 @@ public class RoomActivity extends AppCompatActivity {
             Toast.makeText(this, "Building do not exists or empty", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, HomePage.class));
         }
+
+        idOfFloor = getIntent().getIntExtra("floorId", 1);
+
+        actionBar.setTitle("Floor: " + idOfFloor);
+
+        roomPageLayout.setOnTouchListener(new SwipeListener(this, idOfFloor, countOfFloors, id, this, getWindow()));
 
 
     }
@@ -86,7 +120,7 @@ public class RoomActivity extends AppCompatActivity {
 
         final List<String> floorsIds = new LinkedList<>();
         for (int i = 1; i <= countOfFloors; i++) {
-            floorsIds.add(i + ":" + id);
+            floorsIds.add(idOfFloor + ":" + id);
         }
 
 
@@ -132,7 +166,10 @@ public class RoomActivity extends AppCompatActivity {
 
 
                 if (eventsList != null && eventsList.size() > 0) {
-                    recyclerView.setAdapter(new RoomsAdapter(RoomActivity.this, eventsList));
+                    recyclerView.setAdapter(new RoomsAdapter(RoomActivity.this, eventsList, photosViewModel));
+                } else {
+                    notFoundIcon.setVisibility(View.VISIBLE);
+                    notFoundText.setVisibility(View.VISIBLE);
                 }
 
                 progressBar.setVisibility(View.INVISIBLE);

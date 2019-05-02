@@ -1,18 +1,23 @@
 package com.example.eventerapp;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.eventerapp.entity.Event;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,7 +26,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,10 +50,20 @@ public class EventActivity extends AppCompatActivity {
 
     TextView detailedRoomNumber;
 
+    PhotosViewModel photosViewModel;
+
+    FloatingActionButton actionButton;
+
+    String eventName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+
+        actionButton = findViewById(R.id.floatingActionButton);
+
+        photosViewModel = HomePage.photosViewModel;
 
         eventerPhoto = findViewById(R.id.eventerDetailedPhoto);
 
@@ -69,13 +83,19 @@ public class EventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        String idOfEvent = intent.getStringExtra("id");
+        final String idOfEvent = intent.getStringExtra("id");
         if (idOfEvent == null) {
             NavUtils.navigateUpFromSameTask(this);
         }
+
+
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("");
+
+        if (PhotosViewModel.idToQuery.containsKey(idOfEvent)) {
+            eventerPhoto.setImageBitmap(photosViewModel.getPhoto(PhotosViewModel.ROOM_PHOTO, PhotosViewModel.idToQuery.get(idOfEvent), eventerPhoto.getWidth(), eventerPhoto.getHeight()));
+        }
 
         FirebaseDatabase.getInstance().getReference().child(DatabaseContract.EVENTS_KEY).child(idOfEvent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -87,6 +107,7 @@ public class EventActivity extends AppCompatActivity {
                 event.setMyId(dataSnapshot.child("myId").getValue(Long.class));
                 event.setOwnerEmail(dataSnapshot.child("ownerEmail").getValue(String.class));
                 event.setTitle(dataSnapshot.child("title").getValue(String.class));
+                eventName = event.getTitle();
                 event.setStartDate(dataSnapshot.child("startDate").getValue(String.class));
                 event.setRoomId(dataSnapshot.child("roomId").getValue(Long.class));
 
@@ -153,7 +174,12 @@ public class EventActivity extends AppCompatActivity {
                 FirebaseStorage.getInstance().getReference().child("rooms").child(event.getOwnerEmail()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Picasso.with(EventActivity.this).load(uri).resize(eventerPhoto.getWidth(), eventerPhoto.getHeight()).centerCrop().into(eventerPhoto);
+                        if (PhotosViewModel.idToQuery.containsValue(uri) == false) {
+                            Glide.with(EventActivity.this).load(uri).apply(new RequestOptions().override(eventerPhoto.getWidth(), eventerPhoto.getHeight())).centerCrop().into(eventerPhoto);
+                            photosViewModel.getPhoto(PhotosViewModel.ROOM_PHOTO, uri.toString(), eventerPhoto.getWidth(), eventerPhoto.getHeight());
+                            PhotosViewModel.idToQuery.put(idOfEvent, uri.toString());
+                            System.out.println("Cache not used");
+                        }
                     }
                 });
 
@@ -162,6 +188,16 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent chatIntent = new Intent(EventActivity.this, ChatActivity.class);
+                chatIntent.putExtra("id", idOfEvent);
+                chatIntent.putExtra("name", eventName);
+                startActivity(chatIntent);
             }
         });
     }
@@ -173,5 +209,4 @@ public class EventActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    //TODO find on map button for detailed page
 }

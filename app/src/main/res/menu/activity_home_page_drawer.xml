@@ -3,7 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/my_qr_nav"
+            android:icon="@drawable/my_qr_code_icon"
+            android:title="My QR"
+            />
+        <item
+            android:id="@+id/my_status_nav"
+            android:icon="@drawable/my_state_icon"
+            android:title="My Status"
+            />
+        <item
+            android:id="@+id/my_chats_nav"
+            android:icon="@drawable/join_chat_icon"
+            android:title="My Chats"
+        />
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/hubspot"
@@ -16,7 +30,6 @@
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/wrenchoutline"
             android:title="Settings" />
-    </group>
 
     <item android:title="Account">
         <menu>
