@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eventerapp.R;
+import com.example.eventerapp.activity.ChatActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 

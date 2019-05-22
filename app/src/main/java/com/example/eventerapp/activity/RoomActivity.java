@@ -1,22 +1,14 @@
-package com.example.eventerapp;
+package com.example.eventerapp.activity;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -27,10 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventerapp.viewModel.PhotosViewModel;
+import com.example.eventerapp.R;
+import com.example.eventerapp.adapter.RoomsAdapter;
 import com.example.eventerapp.entity.Event;
-import com.example.eventerapp.entity.Floor;
-import com.example.eventerapp.entity.Room;
-import com.example.eventerapp.entity.UserData;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.example.eventerapp.utils.SwipeListener;
 import com.google.firebase.database.DataSnapshot;

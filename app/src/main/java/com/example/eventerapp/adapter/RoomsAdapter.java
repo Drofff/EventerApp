@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.eventerapp.viewModel.PhotosViewModel;
+import com.example.eventerapp.R;
+import com.example.eventerapp.activity.EventActivity;
 import com.example.eventerapp.entity.Event;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.LinkedList;
 import java.util.List;

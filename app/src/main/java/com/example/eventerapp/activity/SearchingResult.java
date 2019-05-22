@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.activity;
 
 import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.eventerapp.adapter.BuildingsAdapter;
+import com.example.eventerapp.viewModel.PhotosViewModel;
+import com.example.eventerapp.R;
 import com.example.eventerapp.entity.Building;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.example.eventerapp.utils.DatabaseUtils;
@@ -32,8 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SearchingResult extends AppCompatActivity {
 

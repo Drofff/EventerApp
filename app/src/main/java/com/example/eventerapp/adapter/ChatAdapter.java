@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.eventerapp.R;
 import com.example.eventerapp.entity.Message;
 import com.google.firebase.auth.FirebaseAuth;
 

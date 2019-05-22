@@ -24,38 +24,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MyChatsActivity"
-            android:parentActivityName=".HomePage"></activity>
+        <activity android:name=".activity.MyChatsActivity"
+            android:parentActivityName=".activity.HomePage"></activity>
         <activity
-            android:name=".MyStatusActivity"
-            android:parentActivityName=".HomePage" />
+            android:name=".activity.MyStatusActivity"
+            android:parentActivityName=".activity.HomePage" />
         <activity
-            android:name=".MyQrActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.MyQrActivity"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".QrResultActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.QrResultActivity"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CameraActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.CameraActivity"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TransparentTheme"/>
         <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".HomePage" />
+            android:name=".activity.SettingsActivity"
+            android:parentActivityName=".activity.HomePage" />
         <activity
-            android:name=".MembersActivity"
-            android:parentActivityName=".ChatActivity"
+            android:name=".activity.MembersActivity"
+            android:parentActivityName=".activity.ChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ChatActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.ChatActivity"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SearchingResult"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.SearchingResult"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -71,25 +71,25 @@
         </service>
 
         <activity
-            android:name=".RoomAdd"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.RoomAdd"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EventActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.EventActivity"
+            android:parentActivityName=".activity.HomePage"
             android:theme="@style/AppTheme.TransparentTheme"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RoomActivity"
+            android:name=".activity.RoomActivity"
             android:theme="@style/AppTheme.TransparentTheme"
-            android:parentActivityName=".HomePage"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddBuilding"
-            android:parentActivityName=".HomePage"
+            android:name=".activity.AddBuilding"
+            android:parentActivityName=".activity.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HomePage"
+            android:name=".activity.HomePage"
             android:label="@string/title_activity_home_page"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -98,7 +98,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.TransparentTheme"
             android:screenOrientation="portrait">
             <intent-filter>

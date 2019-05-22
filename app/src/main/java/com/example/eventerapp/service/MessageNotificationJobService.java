@@ -5,11 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
-import com.example.eventerapp.ChatActivity;
+import com.example.eventerapp.activity.ChatActivity;
 import com.example.eventerapp.R;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.firebase.jobdispatcher.JobParameters;
@@ -22,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MessageNotificationJobService extends JobService {

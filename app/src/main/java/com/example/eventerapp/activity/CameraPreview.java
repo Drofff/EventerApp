@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.activity;
 
 import android.Manifest;
 import android.content.Context;

@@ -6,7 +6,7 @@
     android:id="@+id/chat_background"
     android:layout_height="match_parent"
     android:background="@drawable/chat_background"
-    tools:context=".ChatActivity">
+    tools:context=".activity.ChatActivity">
 
     <ImageView
         android:id="@+id/joinIcon"

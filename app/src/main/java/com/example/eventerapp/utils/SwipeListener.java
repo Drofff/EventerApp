@@ -3,16 +3,13 @@ package com.example.eventerapp.utils;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.transition.Slide;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
 import com.example.eventerapp.R;
-import com.example.eventerapp.RoomActivity;
+import com.example.eventerapp.activity.RoomActivity;
 
 public class SwipeListener implements View.OnTouchListener {
 

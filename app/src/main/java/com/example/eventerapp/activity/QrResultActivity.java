@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,9 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventerapp.R;
 import com.example.eventerapp.entity.Event;
 import com.example.eventerapp.entity.Message;
-import com.example.eventerapp.entity.Room;
 import com.example.eventerapp.service.MessageNotificationJobService;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.firebase.jobdispatcher.Constraint;
@@ -40,9 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

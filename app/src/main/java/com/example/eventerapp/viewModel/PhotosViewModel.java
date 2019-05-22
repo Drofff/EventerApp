@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.viewModel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;

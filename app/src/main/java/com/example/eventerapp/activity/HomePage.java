@@ -1,4 +1,4 @@
-package com.example.eventerapp;
+package com.example.eventerapp.activity;
 
 import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,13 +11,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +27,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -37,6 +34,10 @@ import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventerapp.adapter.BuildingsAdapter;
+import com.example.eventerapp.viewModel.HomeViewModel;
+import com.example.eventerapp.viewModel.PhotosViewModel;
+import com.example.eventerapp.R;
 import com.example.eventerapp.entity.Building;
 import com.example.eventerapp.utils.DatabaseContract;
 import com.google.firebase.auth.FirebaseAuth;
