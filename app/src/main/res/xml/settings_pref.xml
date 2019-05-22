@@ -5,5 +5,5 @@
     android:title="Chat notifications in battery safe mode"
     android:defaultValue="false"
     android:summaryOff="You will not receive any notifications in battery safe mode"
-    android:summaryOn="You will receive all notifications in battery safe mode"/>
+    android:summaryOn="You will receive all notifications in battery safe mode from chats you join till now"/>
 </PreferenceScreen>

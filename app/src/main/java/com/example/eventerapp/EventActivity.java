@@ -1,18 +1,26 @@
 package com.example.eventerapp;
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,8 +50,6 @@ public class EventActivity extends AppCompatActivity {
 
     TextView description;
 
-    TextView phoneNumber;
-
     TextView startDate;
 
     Button findOnMap;
@@ -54,7 +60,15 @@ public class EventActivity extends AppCompatActivity {
 
     FloatingActionButton actionButton;
 
+    FloatingActionButton callToOwner;
+
     String eventName;
+
+    ImageButton backHomeButton;
+
+    public static String callNumber;
+
+    public static final int REQUEST_CODE_CALL = 55;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +79,8 @@ public class EventActivity extends AppCompatActivity {
 
         photosViewModel = HomePage.photosViewModel;
 
+        backHomeButton = findViewById(R.id.backHomeFromEvent);
+
         eventerPhoto = findViewById(R.id.eventerDetailedPhoto);
 
         title = findViewById(R.id.eventerDetailedTitle);
@@ -73,15 +89,19 @@ public class EventActivity extends AppCompatActivity {
 
         description = findViewById(R.id.detailedDescription);
 
-        phoneNumber = findViewById(R.id.phoneNumberDetailed);
-
         startDate = findViewById(R.id.startDateDetailed);
 
         findOnMap = findViewById(R.id.findOnMapDetailed);
 
         detailedRoomNumber = findViewById(R.id.detaiiledRoomNumber);
 
+        callToOwner = findViewById(R.id.callToEventOwner);
+
         Intent intent = getIntent();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
 
         final String idOfEvent = intent.getStringExtra("id");
         if (idOfEvent == null) {
@@ -89,13 +109,16 @@ public class EventActivity extends AppCompatActivity {
         }
 
 
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("");
-
         if (PhotosViewModel.idToQuery.containsKey(idOfEvent)) {
             eventerPhoto.setImageBitmap(photosViewModel.getPhoto(PhotosViewModel.ROOM_PHOTO, PhotosViewModel.idToQuery.get(idOfEvent), eventerPhoto.getWidth(), eventerPhoto.getHeight()));
         }
+
+        backHomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavUtils.navigateUpFromSameTask(EventActivity.this);
+            }
+        });
 
         FirebaseDatabase.getInstance().getReference().child(DatabaseContract.EVENTS_KEY).child(idOfEvent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -111,10 +134,10 @@ public class EventActivity extends AppCompatActivity {
                 event.setStartDate(dataSnapshot.child("startDate").getValue(String.class));
                 event.setRoomId(dataSnapshot.child("roomId").getValue(Long.class));
 
-                Map<Long, Boolean> dataOfUser = new HashMap<>();
+                Map<String, Boolean> dataOfUser = new HashMap<>();
 
                 for (DataSnapshot snapshot : dataSnapshot.child("members").getChildren()) {
-                    dataOfUser.put(Long.parseLong(snapshot.getKey()), true);
+                    dataOfUser.put(snapshot.getKey(), true);
                 }
                 event.setMembers(dataOfUser);
                 currentEvent = event;
@@ -122,7 +145,23 @@ public class EventActivity extends AppCompatActivity {
                 title.setText(event.getTitle());
                 description.setText(event.getDescription());
                 membersCount.setText(event.getMembers().size() + "");
-                phoneNumber.setText(event.getContactPhone());
+
+                final String phoneNumber = event.getContactPhone();
+
+                callToOwner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ContextCompat.checkSelfPermission(EventActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber.trim()));
+                            startActivity(callIntent);
+                        } else {
+                            String [] perms = {Manifest.permission.CALL_PHONE};
+                            callNumber = phoneNumber.trim();
+                            ActivityCompat.requestPermissions(EventActivity.this, perms, REQUEST_CODE_CALL);
+                        }
+                    }
+                });
+
                 startDate.setText(event.getStartDate());
 
                 FirebaseDatabase.getInstance().getReference().child(DatabaseContract.FLOORS_KEY).child(event.getFloorId()).child("rooms").child(event.getRoomId() + "").child("roomNumber").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -200,6 +239,14 @@ public class EventActivity extends AppCompatActivity {
                 startActivity(chatIntent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_CODE_CALL && callNumber != null) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + callNumber));
+            startActivity(callIntent);
+        }
     }
 
     @Override

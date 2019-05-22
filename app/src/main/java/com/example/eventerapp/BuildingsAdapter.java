@@ -10,8 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +38,7 @@ public class BuildingsAdapter extends RecyclerView.Adapter<BuildingsAdapter.Buil
     Context contextHome;
     Map<String, String> dbKeys;
     PhotosViewModel photosViewModel;
+    public static boolean firstTime = true;
 
     public BuildingsAdapter(Context contextHome, List<Building> buildings, Map<String, String> dbKeys, PhotosViewModel photosViewModel) {
         this.contextHome = contextHome;
@@ -93,32 +97,17 @@ public class BuildingsAdapter extends RecyclerView.Adapter<BuildingsAdapter.Buil
 
         TextView address;
 
-        ImageView star1;
+        Button findOnMap;
 
-        ImageView star2;
-
-        ImageView star3;
-
-        ImageView star4;
-
-        ImageView star5;
-
-        ImageButton findOnMap;
-
-        ConstraintLayout openInApp;
+        LinearLayout openInApp;
 
 
         public BuildingView(@NonNull View itemView) {
             super(itemView);
             buildingPhoto = (ImageView) itemView.findViewById(R.id.imageView);
             address = (TextView) itemView.findViewById(R.id.textView5);
-            findOnMap = (ImageButton) itemView.findViewById(R.id.button3);
-            openInApp = (ConstraintLayout) itemView.findViewById(R.id.constL);
-            star1 = (ImageView) itemView.findViewById(R.id.star1);
-            star2 = (ImageView) itemView.findViewById(R.id.star2);
-            star3 = (ImageView) itemView.findViewById(R.id.star3);
-            star4 = (ImageView) itemView.findViewById(R.id.star4);
-            star5 = (ImageView) itemView.findViewById(R.id.star5);
+            findOnMap = (Button) itemView.findViewById(R.id.button3);
+            openInApp = (LinearLayout) itemView.findViewById(R.id.constL);
         }
 
 
@@ -142,6 +131,7 @@ public class BuildingsAdapter extends RecyclerView.Adapter<BuildingsAdapter.Buil
             return this.buildingPhoto;
         }
 
+
         public void setOpenInApp(final String buildingId, final int countOfFloors, final Context context) {
             this.openInApp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -150,46 +140,6 @@ public class BuildingsAdapter extends RecyclerView.Adapter<BuildingsAdapter.Buil
                     intent.putExtra("id", buildingId);
                     intent.putExtra("floors", countOfFloors);
                     context.startActivity(intent);
-                }
-            });
-            FirebaseDatabase.getInstance().getReference().child(DatabaseContract.BUILDING_RATE_KEY).child(buildingId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    List<Long> rates = new ArrayList<>();
-                    long sum = 0;
-                    for (DataSnapshot s : dataSnapshot.getChildren()) {
-                        Long num = s.getValue(Long.class);
-                        rates.add(num);
-                        sum += num;
-                    }
-                    long finalRate = rates.size() < 1 ? 0 : sum / rates.size();
-
-                    if (finalRate == 1) {
-                            star1.setVisibility(View.VISIBLE);
-                    } else if (finalRate == 2) {
-                        star1.setVisibility(View.VISIBLE);
-                        star2.setVisibility(View.VISIBLE);
-                    } else if (finalRate == 3) {
-                        star1.setVisibility(View.VISIBLE);
-                        star2.setVisibility(View.VISIBLE);
-                        star3.setVisibility(View.VISIBLE);
-                    } else if (finalRate == 4) {
-                        star1.setVisibility(View.VISIBLE);
-                        star2.setVisibility(View.VISIBLE);
-                        star3.setVisibility(View.VISIBLE);
-                        star4.setVisibility(View.VISIBLE);
-                    } else if (finalRate == 5) {
-                        star1.setVisibility(View.VISIBLE);
-                        star2.setVisibility(View.VISIBLE);
-                        star3.setVisibility(View.VISIBLE);
-                        star4.setVisibility(View.VISIBLE);
-                        star5.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
             });
         }

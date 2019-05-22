@@ -4,9 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
@@ -76,15 +80,21 @@ public class ChatActivity extends AppCompatActivity {
 
     String idOfEvent;
 
+    ConstraintLayout chatBackground;
+
     List <Integer> membersIds = new LinkedList<>();
 
     String name;
+
+    public static SharedPreferences sharedPreferences;
 
     public static FirebaseJobDispatcher dispatcher;
 
     public static String lastId;
 
     public static String lastName;
+
+    public static final String KEY_FOR_BACKGROUND_CHAT = "chat_background_photo";
 
     public static boolean isActive;
 
@@ -159,6 +169,8 @@ public class ChatActivity extends AppCompatActivity {
         joinIcon = findViewById(R.id.joinIcon);
         addedIcon = findViewById(R.id.addedMemberAnimIcon);
 
+        chatBackground = findViewById(R.id.chat_background);
+
         email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         FirebaseStorage.getInstance().getReference().child("users").child(email).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -188,6 +200,19 @@ public class ChatActivity extends AppCompatActivity {
             lastName = name;
         } else {
             NavUtils.navigateUpFromSameTask(this);
+        }
+
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Integer backgroundWallpaper = sharedPreferences.getInt(KEY_FOR_BACKGROUND_CHAT + "_" + id, 0);
+
+        System.out.println("Id : " + backgroundWallpaper + " debug");
+
+        switch (backgroundWallpaper) {
+            case 1 : chatBackground.setBackground(getDrawable(R.drawable.chat_background3));
+                        break;
+            case 2 : chatBackground.setBackground(getDrawable(R.drawable.room_background));
+                        break;
         }
 
         FirebaseDatabase.getInstance().getReference().addValueEventListener(new ValueEventListener() {

@@ -1,6 +1,9 @@
 package com.example.eventerapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -12,6 +15,8 @@ import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.eventerapp.utils.DatabaseContract;
@@ -42,6 +47,20 @@ public class MembersActivity extends AppCompatActivity {
 
     String myId;
 
+    FrameLayout option1;
+
+    FrameLayout option2;
+
+    FrameLayout option3;
+
+    ImageView frameOfChatBackground1;
+
+    ImageView frameOfChatBackground2;
+
+    ImageView frameOfChatBackground3;
+
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +70,12 @@ public class MembersActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         leaveChatButton = findViewById(R.id.leaveChatButton);
+        frameOfChatBackground1 = findViewById(R.id.frame_of_cb1);
+        frameOfChatBackground2 = findViewById(R.id.frame_of_cb2);
+        frameOfChatBackground3 = findViewById(R.id.frame_of_cb3);
+        option1 = findViewById(R.id.cb1);
+        option2 = findViewById(R.id.cb2);
+        option3 = findViewById(R.id.cb3);
 
         Intent intent = getIntent();
 
@@ -62,6 +87,34 @@ public class MembersActivity extends AppCompatActivity {
             startActivity(intentToMain);
         }
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final Integer selectedBackground = sharedPreferences.getInt(ChatActivity.KEY_FOR_BACKGROUND_CHAT + "_" + idOfEvent, 0);
+
+        selectBackground(selectedBackground);
+
+        option1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences.edit().putInt(ChatActivity.KEY_FOR_BACKGROUND_CHAT + "_" + idOfEvent, 0).apply();
+                selectBackground(0);
+            }
+        });
+
+        option2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences.edit().putInt(ChatActivity.KEY_FOR_BACKGROUND_CHAT + "_" + idOfEvent, 1).apply();
+                selectBackground(1);
+            }
+        });
+
+        option3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences.edit().putInt(ChatActivity.KEY_FOR_BACKGROUND_CHAT + "_" + idOfEvent, 2).apply();
+                selectBackground(2);
+            }
+        });
 
         recyclerView = findViewById(R.id.membersListDetails);
         recyclerView.setHasFixedSize(true);
@@ -148,6 +201,27 @@ public class MembersActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    public void selectBackground(int n) {
+
+        switch (n) {
+            case 0 : frameOfChatBackground1.setImageDrawable(getDrawable(R.drawable.selected_frame));
+                     frameOfChatBackground2.setImageDrawable(getDrawable(R.drawable.frame));
+                     frameOfChatBackground3.setImageDrawable(getDrawable(R.drawable.frame));
+                break;
+
+            case 1 : frameOfChatBackground1.setImageDrawable(getDrawable(R.drawable.frame));
+                     frameOfChatBackground2.setImageDrawable(getDrawable(R.drawable.selected_frame));
+                     frameOfChatBackground3.setImageDrawable(getDrawable(R.drawable.frame));
+                break;
+
+            case 2 : frameOfChatBackground3.setImageDrawable(getDrawable(R.drawable.selected_frame));
+                     frameOfChatBackground1.setImageDrawable(getDrawable(R.drawable.frame));
+                     frameOfChatBackground2.setImageDrawable(getDrawable(R.drawable.frame));
+                break;
+        }
 
     }
 

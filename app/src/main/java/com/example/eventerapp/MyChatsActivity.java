@@ -34,6 +34,7 @@ public class MyChatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_chats);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("My Chats");
 
         final String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
@@ -78,9 +79,18 @@ public class MyChatsActivity extends AppCompatActivity {
 
                         Map<String, String> chats = new HashMap<>();
 
-                        if (snapshot.child("members").child(myId).exists()) {
+                        boolean memberOfThisChat = false;
+
+                        for (DataSnapshot sn : snapshot.child("members").getChildren()) {
+                            if (sn.getValue(Long.class).toString().equals(myId)) {
+                                memberOfThisChat = true;
+                            }
+                        }
+
+                        if (memberOfThisChat) {
 
                             chats.put("title", dataSnapshot.child(DatabaseContract.EVENTS_KEY).child(snapshot.getKey()).child("title").getValue(String.class));
+                            chats.put("id", snapshot.getKey());
 
                             for (DataSnapshot ds : snapshot.getChildren()) {
 
@@ -96,8 +106,11 @@ public class MyChatsActivity extends AppCompatActivity {
 
                             }
 
+                            Long lastNotificatedMessageId = dataSnapshot.child("notification").child(myId).child(snapshot.getKey()).getValue(Long.class);
+
+                            chats.put("newMessages", lastMessageId - lastNotificatedMessageId.intValue() + "");
                             chats.put("lastMessage", snapshot.child(lastMessageId + "").child("messageText").getValue(String.class));
-                            chats.put("photoUrl", snapshot.child(lastMessageId + "").child("photoUrl").getValue(String.class));
+                            chats.put("ownerEmail", userData.get(myId));
 
                             chatList.add(chats);
 

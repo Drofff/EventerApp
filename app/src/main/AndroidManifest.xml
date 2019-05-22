@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -40,7 +41,7 @@
             android:name=".CameraActivity"
             android:parentActivityName=".HomePage"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.TransparentTheme"/>
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".HomePage" />
@@ -76,9 +77,11 @@
         <activity
             android:name=".EventActivity"
             android:parentActivityName=".HomePage"
+            android:theme="@style/AppTheme.TransparentTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".RoomActivity"
+            android:theme="@style/AppTheme.TransparentTheme"
             android:parentActivityName=".HomePage"
             android:screenOrientation="portrait" />
         <activity
@@ -96,6 +99,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.TransparentTheme"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

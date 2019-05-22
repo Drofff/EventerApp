@@ -2,12 +2,12 @@ package com.example.eventerapp;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -34,7 +35,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,15 +45,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String CLIENT_ID = "138828966830-trgjlhf73gahssul8fjloj93n0nochef.apps.googleusercontent.com";
 
-    FloatingActionButton logInButton;
+    Button logInButton;
 
     GoogleSignInClient client;
 
@@ -74,17 +72,13 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
 
-        logInButton = (FloatingActionButton) findViewById(R.id.button);
+        logInButton = (Button) findViewById(R.id.logInButton);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
 
         HomePage.photosViewModel = ViewModelProviders.of(this).get(PhotosViewModel.class);
-
-        actionBar = getSupportActionBar();
-        actionBar.setTitle(Html.fromHtml("<font color = 'gray'>Eventer</font>"));
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-
-        Animator animatorSet = AnimatorInflater.loadAnimator(this, R.animator.login_button);
-        animatorSet.setTarget(logInButton);
-        animatorSet.start();
 
         firebaseAuth = FirebaseAuth.getInstance();
 

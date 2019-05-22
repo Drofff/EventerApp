@@ -1,138 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constL"
-    android:layout_width="match_parent"
-    android:background="@android:color/white"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/star4"
-        android:layout_width="28dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:tint="@android:color/darker_gray"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.626"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421"
-        app:srcCompat="@drawable/star" />
+    <LinearLayout
+        android:layout_width="230dp"
+        android:id="@+id/cardForBuilding"
+        android:orientation="vertical"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:background="@drawable/building_recycler_background"
+        android:layout_height="300dp">
 
-    <ImageView
-        android:id="@+id/star5"
-        android:layout_width="28dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:tint="@android:color/darker_gray"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.694"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421"
-        app:srcCompat="@drawable/star" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:background="@drawable/building_recycler_background"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            />
 
-    <ImageView
-        android:id="@+id/star3"
-        android:layout_width="28dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:tint="@android:color/darker_gray"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421"
-        app:srcCompat="@drawable/star" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:lineSpacingExtra="8dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="left"
+            android:maxLength="35"
+            android:text="New York, 30 Avenue"
+            android:textColor="#374168"
+            android:textSize="20sp"
+             />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="111dp"
-        android:layout_height="123dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/open_in_map"
+            android:orientation="vertical"
+            >
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:gravity="left"
-        android:maxLength="35"
-        android:text="Address example 2B, Ukraine, Kiev"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.181" />
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:text="OPEN IN MAP"
+                android:textColor="#F08C21"
+                android:textSize="14sp" />
 
-    <ImageView
-        android:id="@+id/star1"
-        android:layout_width="28dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:tint="@android:color/darker_gray"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.397"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421"
-        app:srcCompat="@drawable/star" />
+        </android.support.constraint.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/star2"
-        android:layout_width="28dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:tint="@android:color/darker_gray"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.474"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421"
-        app:srcCompat="@drawable/star" />
+    </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/button3"
-        android:layout_width="49dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
-        android:tint="@android:color/holo_green_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/maps" />
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

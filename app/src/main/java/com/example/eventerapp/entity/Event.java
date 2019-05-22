@@ -9,7 +9,7 @@ public class Event {
 
     private String description;
 
-    private Map<Long, Boolean> members;
+    private Map<String, Boolean> members;
 
     private String title;
 
@@ -25,7 +25,7 @@ public class Event {
 
     public Event() {}
 
-    public Event(String Long, String description, Map<Long, Boolean> members, String title, String floorId, String contactPhone, String startDate) {
+    public Event(String Long, String description, Map<String, Boolean> members, String title, String floorId, String contactPhone, String startDate) {
         this.roomId = roomId;
         this.description = description;
         this.members = members;
@@ -67,11 +67,11 @@ public class Event {
         this.description = description;
     }
 
-    public Map<Long, Boolean> getMembers() {
+    public Map<String, Boolean> getMembers() {
         return members;
     }
 
-    public void setMembers(Map<Long, Boolean> members) {
+    public void setMembers(Map<String, Boolean> members) {
         this.members = members;
     }
 

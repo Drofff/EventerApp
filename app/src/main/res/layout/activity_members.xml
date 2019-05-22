@@ -11,14 +11,11 @@
         android:id="@+id/membersListDetails"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/leaveChatButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@+id/cb2"></android.support.v7.widget.RecyclerView>
 
     <Button
         android:id="@+id/leaveChatButton"
@@ -38,5 +35,101 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <FrameLayout
+        android:id="@+id/cb1"
+        android:layout_width="70dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.172"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/chat_background" />
+
+        <ImageView
+            android:id="@+id/frame_of_cb1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/frame" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/cb2"
+        android:layout_width="70dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/chat_background3" />
+
+        <ImageView
+            android:id="@+id/frame_of_cb2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/frame" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/cb3"
+        android:layout_width="70dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.873"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="70dp"
+            android:layout_height="120dp"
+            app:srcCompat="@drawable/room_background" />
+
+        <ImageView
+            android:id="@+id/frame_of_cb3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/frame" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Choose Background"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/membersListDetails"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.028" />
 
 </android.support.constraint.ConstraintLayout>

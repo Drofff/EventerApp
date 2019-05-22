@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -120,8 +122,8 @@ public class SearchingResult extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child(DatabaseContract.BUILDINGS_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Map<String, String> dbKeys = new HashMap<>();
-                List<Building> buildings = new ArrayList<>();
+                Map<String, String> dbKeys = new LinkedHashMap<>();
+                List<Building> buildings = new LinkedList<>();
                 final Map<Building, Integer> searchingResults = new HashMap<>();
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
 

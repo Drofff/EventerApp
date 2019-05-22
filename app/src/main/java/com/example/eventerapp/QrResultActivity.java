@@ -21,9 +21,15 @@ import android.widget.Toast;
 import com.example.eventerapp.entity.Event;
 import com.example.eventerapp.entity.Message;
 import com.example.eventerapp.entity.Room;
+import com.example.eventerapp.service.MessageNotificationJobService;
 import com.example.eventerapp.utils.DatabaseContract;
+import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -235,6 +241,11 @@ public class QrResultActivity extends AppCompatActivity {
                                                         event.setTitle(title.getText().toString());
                                                         event.setRoomId(Long.parseLong(roomId));
                                                         event.setStartDate(new Date().toString());
+
+                                                        Map<String, Boolean> members = new HashMap<>();
+                                                        members.put(userId + "", true);
+                                                        event.setMembers(members);
+                                                        event.setMyId(nextEventId);
                                                         FirebaseDatabase.getInstance().getReference().child(DatabaseContract.EVENTS_KEY).child(nextEventId + "").setValue(event);
 
                                                         message = new Message();
@@ -252,6 +263,31 @@ public class QrResultActivity extends AppCompatActivity {
                                                                 ref.child(0 + "").setValue(message);
                                                                 ref.child("next_id").setValue(1);
                                                                 ref.child("members").push().setValue(finalUserId);
+
+                                                                FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(QrResultActivity.this));
+                                                                Bundle eventData = new Bundle();
+                                                                eventData.putString("eventId", nextEventId + "");
+                                                                eventData.putString("eventName", title.getText().toString());
+                                                                eventData.putString("userId", finalUserId + "");
+                                                                Job job = dispatcher.newJobBuilder()
+                                                                        .setService(MessageNotificationJobService.class)
+                                                                        .setLifetime(Lifetime.FOREVER)
+                                                                        .setConstraints(Constraint.ON_ANY_NETWORK)
+                                                                        .setRecurring(true)
+                                                                        .setExtras(eventData)
+                                                                        .setReplaceCurrent(true)
+                                                                        .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                                                                        .setTag(title.getText().toString() + "-chat")
+                                                                        .setTrigger(Trigger.executionWindow(0, 10))
+                                                                        .build();
+
+                                                                dispatcher.schedule(job);
+
+                                                                FirebaseDatabase.getInstance().getReference("notification").child(finalUserId + "").child(nextEventId + "").setValue(0l);
+
+                                                                Toast.makeText(QrResultActivity.this, "Done!", Toast.LENGTH_SHORT).show();
+                                                                Intent intent = new Intent(QrResultActivity.this, HomePage.class);
+                                                                startActivity(intent);
                                                             }
                                                         }).addOnFailureListener(new OnFailureListener() {
                                                             @Override

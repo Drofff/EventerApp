@@ -57,7 +57,7 @@ public class MessageNotificationJobService extends JobService {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        Long lastMessageId = dataSnapshot.child("notification").child(userId).child(eventId).getValue(Long.class);
+                        Integer lastMessageId = dataSnapshot.child("notification").child(userId).child(eventId).getValue(Long.class).intValue();
 
                         Intent intentForChat = new Intent(context, ChatActivity.class);
                         intentForChat.putExtra("id", eventId);
@@ -65,7 +65,7 @@ public class MessageNotificationJobService extends JobService {
 
                         pendingIntent = PendingIntent.getActivity(context, REQUEST_CODE_FOR_PENDING_INTENT, intentForChat, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        final Long currentMessageId = lastMessageId == null ? -1 : lastMessageId;
+                        final Integer currentMessageId = lastMessageId == null ? -1 : lastMessageId;
 
                                 List<String> newMessages = new ArrayList<>();
 

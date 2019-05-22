@@ -33,6 +33,7 @@
         android:maxLength="100"
         android:minWidth="30dp"
         android:padding="8dp"
+        android:gravity="left"
         android:text="This is a message"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -19,14 +19,19 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.support.v7.widget.SearchView;
 import android.widget.TextView;
@@ -71,6 +76,8 @@ public class HomePage extends AppCompatActivity
 
     ProgressBar progressBar;
 
+    LinearLayout buildingParent;
+
     NavigationView navigationView;
 
     public static final int KEY_FOR_LOADER = 34;
@@ -103,14 +110,39 @@ public class HomePage extends AppCompatActivity
         notFoundText = findViewById(R.id.notFoundBuildText);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager.setReverseLayout(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
-        DividerItemDecoration decoration = new DividerItemDecoration(this, linearLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(decoration);
         recyclerView.setAdapter(new BuildingsAdapter(this, new ArrayList<Building>(), Collections.<String, String>emptyMap(), photosViewModel));
 
+        final SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+
+                View currentView = snapHelper.findSnapView(linearLayoutManager);
+                int pos = linearLayoutManager.getPosition(currentView);
+
+                RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(pos);
+                buildingParent = viewHolder.itemView.findViewById(R.id.cardForBuilding);
+                buildingParent.animate().scaleX(1).scaleY(1).setDuration(550).setInterpolator(new AccelerateInterpolator()).start();
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                     buildingParent.animate().scaleX(1).scaleY(1).setDuration(550).setInterpolator(new AccelerateInterpolator()).start();
+                } else {
+                     buildingParent.animate().scaleY(0.7f).scaleX(0.7f).setDuration(350).setInterpolator(new AccelerateInterpolator()).start();
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -162,10 +194,16 @@ public class HomePage extends AppCompatActivity
             final String email = (String) result.get("emailOfUser");
             openUris.put(email, postSnap.getKey());
 
-            if (email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-                canAddNewBuilding = false;
-                MenuItem item = navigationView.getMenu().findItem(R.id.nav_gallery);
-                item.setTitle(Html.fromHtml("<font color='gray'>" + item.getTitle() + "</font>"));
+            try {
+
+                if (email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                    canAddNewBuilding = false;
+                    MenuItem item = navigationView.getMenu().findItem(R.id.nav_gallery);
+                    item.setTitle(Html.fromHtml("<font color='gray'>" + item.getTitle() + "</font>"));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             Map<String, Boolean> floorsNames = new HashMap<>();

@@ -1,10 +1,15 @@
 package com.example.eventerapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -60,12 +65,26 @@ public class MyStatusActivity extends AppCompatActivity {
         actionBar.setTitle("");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        status = findViewById(R.id.statusText);
+
+        userPhoto = findViewById(R.id.imageView5);
+
+        goToChat = findViewById(R.id.chatOfEventButton);
+
+        goToEventPage = findViewById(R.id.eventPageGoToButton);
+
+        leaveCurrentEvent = findViewById(R.id.leaveStatusButton);
+
         final String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
         FirebaseStorage.getInstance().getReference().child("users").child(email).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(MyStatusActivity.this).load(uri).into(userPhoto);
+                try {
+                    Glide.with(MyStatusActivity.this).load(uri).into(userPhoto);
+                } catch (Exception e) {
+                    System.out.println("Glide error");
+                }
             }
         });
 
@@ -134,7 +153,7 @@ public class MyStatusActivity extends AppCompatActivity {
                         goToEventPage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(MyStatusActivity.this, ChatActivity.class);
+                                Intent intent = new Intent(MyStatusActivity.this, EventActivity.class);
                                 intent.putExtra("id", eventId);
                                 startActivity(intent);
                             }

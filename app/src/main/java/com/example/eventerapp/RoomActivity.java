@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.LoaderManager;
@@ -19,6 +20,8 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -73,6 +76,10 @@ public class RoomActivity extends AppCompatActivity {
 
     PhotosViewModel photosViewModel;
 
+    ImageButton backToHome;
+
+    TextView currentView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +88,21 @@ public class RoomActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_room);
 
+        currentView = findViewById(R.id.currentFloor);
+
         photosViewModel = HomePage.photosViewModel;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+
+        backToHome = findViewById(R.id.backToMainFromRoomActivity);
+        backToHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavUtils.navigateUpFromSameTask(RoomActivity.this);
+            }
+        });
 
         recyclerView = (RecyclerView) findViewById(R.id.roomShow);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -95,8 +116,6 @@ public class RoomActivity extends AppCompatActivity {
         notFoundText = findViewById(R.id.roomNotFoundText);
         roomPageLayout = findViewById(R.id.activityRoomLayout);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         id = getIntent().getStringExtra("id");
         countOfFloors = getIntent().getIntExtra("floors", 0);
@@ -107,7 +126,7 @@ public class RoomActivity extends AppCompatActivity {
 
         idOfFloor = getIntent().getIntExtra("floorId", 1);
 
-        actionBar.setTitle("Floor: " + idOfFloor);
+        currentView.setText(idOfFloor + "");
 
         roomPageLayout.setOnTouchListener(new SwipeListener(this, idOfFloor, countOfFloors, id, this, getWindow()));
 
@@ -145,10 +164,10 @@ public class RoomActivity extends AppCompatActivity {
                         event.setStartDate(s.child("startDate").getValue(String.class));
                         event.setRoomId(s.child("roomId").getValue(Long.class));
 
-                        Map<Long, Boolean> dataOfUser = new HashMap<>();
+                        Map<String, Boolean> dataOfUser = new HashMap<>();
 
                         for (DataSnapshot snapshot : s.child("members").getChildren()) {
-                            dataOfUser.put(Long.parseLong(snapshot.getKey()), true);
+                            dataOfUser.put(snapshot.getKey(), true);
                         }
                         event.setMembers(dataOfUser);
                         eventsList.add(event);
@@ -170,6 +189,7 @@ public class RoomActivity extends AppCompatActivity {
                 } else {
                     notFoundIcon.setVisibility(View.VISIBLE);
                     notFoundText.setVisibility(View.VISIBLE);
+                    backToHome.setColorFilter(getColor(android.R.color.black));
                 }
 
                 progressBar.setVisibility(View.INVISIBLE);
